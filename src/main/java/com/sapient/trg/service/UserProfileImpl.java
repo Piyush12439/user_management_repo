@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.sapient.trg.dao.UserProfileRepository;
+import com.sapient.trg.entity.RegionMaster;
+import com.sapient.trg.entity.StoreMaster;
 import com.sapient.trg.entity.UserProfile;
 import com.sapient.trg.exception.UserProfileException;
 
@@ -83,6 +85,38 @@ public class UserProfileImpl implements UserProfileService{
 		try {
 			UserProfile updateduser=userProfileRepo.save(User);
 			return updateduser;
+		}catch(DataAccessException e) {
+			throw new UserProfileException(e.getMessage(),e);
+		}catch(Exception e) {
+			throw new UserProfileException(e.getMessage(),e);
+		}
+	}
+
+	@Override
+	public List<UserProfile> getAllUsersByStoreId(StoreMaster storeId) throws UserProfileException {
+		try {
+			List<UserProfile> userList= userProfileRepo.getUsersByStore(storeId);
+			if(userList.size()!= 0) {
+				return userList;
+			}else {
+				throw new Exception("No Users in the database");
+			}
+		}catch(DataAccessException e) {
+			throw new UserProfileException(e.getMessage(),e);
+		}catch(Exception e) {
+			throw new UserProfileException(e.getMessage(),e);
+		}
+	}
+	
+	@Override
+	public List<UserProfile> getAllUsersByregionId(RegionMaster storeId) throws UserProfileException {
+		try {
+			List<UserProfile> userList= userProfileRepo.getUsersByregion(storeId);
+			if(userList.size()!= 0) {
+				return userList;
+			}else {
+				throw new Exception("No Users in the database");
+			}
 		}catch(DataAccessException e) {
 			throw new UserProfileException(e.getMessage(),e);
 		}catch(Exception e) {

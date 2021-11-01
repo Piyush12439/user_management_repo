@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-
+import com.sapient.trg.entity.RegionMaster;
+import com.sapient.trg.entity.StoreMaster;
 import com.sapient.trg.entity.UserCredential;
 import com.sapient.trg.entity.UserProfile;
+import com.sapient.trg.service.RegionService;
+import com.sapient.trg.service.StoreService;
 import com.sapient.trg.service.UserProfileService;
 import com.sapient.trg.service.UserService;
 
@@ -46,6 +49,12 @@ public class UserProfileController {
 	
 	@Autowired
 	private UserProfileService userProfile;
+	
+	@Autowired
+	private StoreService storeMaster;
+	
+	@Autowired
+	private RegionService regionService;
 	
 	@ApiOperation(value = "add new Profile",
 			consumes = "UserProfile",
@@ -141,4 +150,49 @@ public class UserProfileController {
 		}
 	}
 
+	@ApiOperation(value = "Find All Users Profile By Store",
+			consumes = "Store Id",
+			produces = "List of UserProfile objects",
+			response = UserProfile.class,
+			nickname = "getAllUsersProfileBy StoreId",
+			notes = "http://localhost:8082/usm/Userprofile/store/all"
+			)
+	@GetMapping("/store/{id}")
+	public ResponseEntity<List<UserProfile>> getAllUsersByStore(@PathVariable(name = "id")Long Id){
+		try {
+			StoreMaster region=storeMaster.getStore(Id);
+			List<UserProfile> userList= userProfile.getAllUsersByStoreId(region);
+			if(userList.size()==0) {
+				log.info("No User in database");
+				throw new Exception("No User in database");
+			}
+			return new ResponseEntity<>(userList,HttpStatus.OK);
+		}catch(Exception e) {
+			log.error(e.getMessage(),e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+		}
+	}
+	
+	@ApiOperation(value = "Find All Users Profile By region",
+			consumes = "Region Id",
+			produces = "List of UserProfile objects",
+			response = UserProfile.class,
+			nickname = "getAllUsersProfileBy regionId",
+			notes = "http://localhost:8082/usm/Userprofile/region/{id}"
+			)
+	@GetMapping("/region/{id}")
+	public ResponseEntity<List<UserProfile>> getAllUsersByRegion(@PathVariable(name = "id")Long Id){
+		try {
+			RegionMaster region=regionService.getRegion(Id);
+			List<UserProfile> userList= userProfile.getAllUsersByregionId(region);
+			if(userList.size()==0) {
+				log.info("No User in database");
+				throw new Exception("No User in database");
+			}
+			return new ResponseEntity<>(userList,HttpStatus.OK);
+		}catch(Exception e) {
+			log.error(e.getMessage(),e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+		}
+	}
 }

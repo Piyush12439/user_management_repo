@@ -13,4 +13,7 @@ import com.sapient.trg.entity.StoreMaster;
 @Repository
 public interface StoreRepository extends JpaRepository<StoreMaster,Long>{
 	
+	
+	@Query ("select s from StoreMaster s where s.region= ?1")
+	List<StoreMaster> getStoreMasterByRegion(RegionMaster storeID);
 }

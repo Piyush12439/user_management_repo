@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.sapient.trg.dao.RegionRepository;
 import com.sapient.trg.entity.RegionMaster;
 import com.sapient.trg.entity.StoreMaster;
-
+import com.sapient.trg.service.RegionService;
 import com.sapient.trg.service.StoreService;
 
 import io.swagger.annotations.Api;
@@ -43,6 +44,9 @@ public class StoreMasterController {
 	
 	@Autowired
 	private StoreService storeService;
+	
+	@Autowired
+	private RegionService regionMaster;
 	
 //	//http://localhost:8082/ums/store/all
 //	@GetMapping("/all")
@@ -131,20 +135,21 @@ public class StoreMasterController {
 		}
 	
 }
-//	@ApiOperation(consumes = "region_id",produces = "StoreMaster",
-//			notes = "http://localhost:8082/usm/store/<Store_id>",
-//			value = "Get store by store_id",
-//			response = RegionMaster.class,
-//			nickname = "get-Store By Store-id" )
-//	@GetMapping("/store/region/{id}")
-//	public ResponseEntity<StoreMaster> getStoreId(@PathVariable(name = "id")Long Id){
-//		try {
-//			StoreMaster store= storeService.getStore(Id);
-//			log.info("returns store :"+Id+" details");
-//			return new ResponseEntity<>(store,HttpStatus.OK);
-//		}catch(Exception e) {
-//			log.error(e.getMessage(),e);
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-//		}
-//	}
+	@ApiOperation(consumes = "region_id",produces = "StoreMaster",
+			notes = "http://localhost:8082/usm/store/region/{id}",
+			value = "Get stores in a region by region_id",
+			response = RegionMaster.class,
+			nickname = "get-Stores By region-id" )
+	@GetMapping("/region/{id}")
+	public ResponseEntity<List<StoreMaster>> getStoreByRegionId(@PathVariable(name = "id")Long Id){
+		try {
+			RegionMaster region=regionMaster.getRegion(Id);
+			List<StoreMaster> store= storeService.getStoresbyregion(region);
+			log.info("returns store :"+Id+" details");
+			return new ResponseEntity<>(store,HttpStatus.OK);
+		}catch(Exception e) {
+			log.error(e.getMessage(),e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+		}
+	}
 }

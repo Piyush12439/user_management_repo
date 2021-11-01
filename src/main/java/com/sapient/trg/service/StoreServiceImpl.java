@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.sapient.trg.dao.StoreRepository;
+import com.sapient.trg.entity.RegionMaster;
 import com.sapient.trg.entity.StoreMaster;
 import com.sapient.trg.exception.StoreException;
 
@@ -78,22 +79,21 @@ public class StoreServiceImpl implements StoreService {
 		}
 	}
 //
-//	@Override
-//	public StoreMaster getStoreregion(Long regionID) throws StoreException {
-//		try {
-//			StoreMaster optional=storedao.store(regionID);
-//			return optional;
-////			if(optional.isPresent()) {				
-////				return optional.get();
-////			}else {
-////				throw new Exception("Invalid Store_id");
-////			}
-//		}catch(DataAccessException e) {
-//			throw new StoreException(e.getMessage(),e);
-//		}catch(Exception e) {
-//			throw new StoreException(e.getMessage(),e);
-//		}
-//	}
+	@Override
+	public List<StoreMaster> getStoresbyregion(RegionMaster regionID) throws StoreException {
+		try {
+			List<StoreMaster> storeList=storedao.getStoreMasterByRegion(regionID);
+			if(storeList.size()!= 0) {
+				return storeList;
+			}else {
+				throw new Exception("No store in the database");
+				}
+			}catch(DataAccessException e) {
+			throw new StoreException(e.getMessage(),e);
+		}catch(Exception e) {
+			throw new StoreException(e.getMessage(),e);
+		}
+	}
 //	
 
 }

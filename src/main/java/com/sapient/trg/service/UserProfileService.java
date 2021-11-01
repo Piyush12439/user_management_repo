@@ -3,7 +3,8 @@ package com.sapient.trg.service;
 
 import java.util.List;
 
-
+import com.sapient.trg.entity.RegionMaster;
+import com.sapient.trg.entity.StoreMaster;
 import com.sapient.trg.entity.UserProfile;
 
 
@@ -15,6 +16,8 @@ public interface UserProfileService {
 	public abstract List<UserProfile> getAllUsers() throws UserProfileException;
 	public abstract Long deleteUser(Long Userid) throws UserProfileException;
 	public abstract UserProfile updateUserDetails(UserProfile User) throws UserProfileException;
+	public abstract List<UserProfile> getAllUsersByStoreId(StoreMaster stroreId) throws UserProfileException;
+	public abstract List<UserProfile> getAllUsersByregionId(RegionMaster storeId) throws UserProfileException;
 
 
 }
